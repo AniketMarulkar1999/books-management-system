@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
 import BookDataService from "../services/book.services";
 
-const AddBook = ({ id, setBookId }) => {
+const AddBook = ({ id, setBookId}) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [status, setStatus] = useState("Available");
@@ -49,21 +49,24 @@ const AddBook = ({ id, setBookId }) => {
     setPrice("");
   };
 
-  const editHandler = async () => {
-    setMessage("");
-    try {
-      const docSnap = await BookDataService.getBook(id);
-      console.log("the record is :", docSnap.data());
-      setTitle(docSnap.data().title);
-      setAuthor(docSnap.data().author);
-      setPrice(docSnap.data().price);
-      setStatus(docSnap.data().status);
-    } catch (err) {
-      setMessage({ error: true, msg: err.message });
-    }
-  };
-
   useEffect(() => {
+	// To fix error: React Hook useEffect has a missing dependency: 'editHandler'.
+	// Either include it or remove the dependency array
+	const editHandler = async () => {
+		setMessage("");
+		try {
+		  const docSnap = await BookDataService.getBook(id);
+		  console.log("the record is :", docSnap.data());
+		  setTitle(docSnap.data().title);
+		  setAuthor(docSnap.data().author);
+		  setPrice(docSnap.data().price);
+		  setStatus(docSnap.data().status);
+		}
+		catch (err) {
+		  setMessage({ error: true, msg: err.message });
+		}
+	};
+
     console.log("The id here is : ", id);
     if (id !== undefined && id !== "") {
       editHandler();
